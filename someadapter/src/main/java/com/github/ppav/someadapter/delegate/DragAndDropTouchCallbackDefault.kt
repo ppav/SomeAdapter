@@ -31,7 +31,7 @@ internal class DragAndDropTouchCallbackDefault : DragAndDropTouchCallback() {
     source: ViewHolder,
     target: ViewHolder
   ): Boolean {
-    listener?.onMove?.invoke(source.adapterPosition, target.adapterPosition)
+    listener?.onMove?.invoke(source.bindingAdapterPosition, target.bindingAdapterPosition)
     return true
   }
 
@@ -47,7 +47,7 @@ internal class DragAndDropTouchCallbackDefault : DragAndDropTouchCallback() {
     if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
       (viewHolder as? DragAndDropHolderListener)?.onMoveStarted?.invoke()
 
-      viewHolder?.adapterPosition
+      viewHolder?.bindingAdapterPosition
           ?.run { listener?.onMoveStateChanged?.invoke(START, this) }
     }
     super.onSelectedChanged(viewHolder, actionState)
@@ -59,7 +59,7 @@ internal class DragAndDropTouchCallbackDefault : DragAndDropTouchCallback() {
   ) {
     super.clearView(recyclerView, viewHolder)
     (viewHolder as? DragAndDropHolderListener)?.onMoveFinish?.invoke()
-    listener?.onMoveStateChanged?.invoke(FINISH, viewHolder.adapterPosition)
+    listener?.onMoveStateChanged?.invoke(FINISH, viewHolder.bindingAdapterPosition)
   }
 }
 

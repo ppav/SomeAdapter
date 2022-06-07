@@ -5,19 +5,19 @@ import androidx.recyclerview.widget.AdapterListUpdateCallback
 import androidx.recyclerview.widget.AsyncDifferConfig.Builder
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.github.ppav.someadapter.delegate.DelegateComposition
 import com.github.ppav.someadapter.delegate.SomeDelegate
 
-class SomeAdapter internal constructor(
-  private val binders: List<ItemBinder<*>>,
-  private val delegate: SomeDelegate
-) :
-    Adapter<ViewHolder>() {
+open class SomeAdapter internal constructor(
+  private val binders: List<ItemBinder<*>>
+) : Adapter<ViewHolder>() {
 
-  private val diffCallbackDelegate = object :
+  private val differ by lazy {
+    AsyncListDiffer(AdapterListUpdateCallback(this), Builder(diffCallback).build())
+  }
+
+  private val diffCallback = object :
       DiffUtil.ItemCallback<Any>() {
     override fun areItemsTheSame(
       oldItem: Any,
@@ -37,33 +37,10 @@ class SomeAdapter internal constructor(
         .diffCallback.getChangePayload(oldItem, newItem)
   }
 
-  override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-    super.onAttachedToRecyclerView(recyclerView)
-    delegate.onAttachRecyclerView(recyclerView)
-  }
-
-  override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-    delegate.onDetachedRecyclerView(recyclerView)
-    super.onDetachedFromRecyclerView(recyclerView)
-  }
-
-  init {
-    delegate.itemsProvider = { items }
-  }
-
-  private var items: MutableList<Any> = mutableListOf()
-
-  fun submitList(
+  open fun submitList(
     list: List<Any>,
     commitCallback: Runnable? = null
-  ) {
-    items = list.toMutableList()
-    differ.submitList(items, commitCallback)
-  }
-
-  private val differ by lazy {
-    AsyncListDiffer(AdapterListUpdateCallback(this), Builder(diffCallbackDelegate).build())
-  }
+  ) = differ.submitList(list, commitCallback)
 
   override fun onCreateViewHolder(
     parent: ViewGroup,
@@ -87,7 +64,6 @@ class SomeAdapter internal constructor(
       binders.first { viewBinder -> viewBinder.isType(this) }
           .bindView(holder, this, position, payloads)
     }
-
   }
 
   override fun getItemViewType(position: Int): Int {
@@ -103,7 +79,10 @@ class SomeAdapter internal constructor(
   class Builder {
     private val binders: MutableList<ItemBinder<*>> = mutableListOf()
     private val delegates: MutableList<SomeDelegate> = mutableListOf()
-    fun build() = SomeAdapter(binders, DelegateComposition(delegates))
+    fun build(): SomeAdapter =
+      if (delegates.isEmpty()) SomeAdapter(binders)
+      else SomeAdapterDelegate(binders, delegates)
+
     @PublishedApi internal fun addItem(binder: ItemBinder<*>) = this.apply { binders.add(binder) }
     @PublishedApi internal fun addDelegate(delegate: SomeDelegate) =
       this.apply { delegates.add(delegate) }

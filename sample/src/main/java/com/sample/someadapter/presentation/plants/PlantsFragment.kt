@@ -39,8 +39,8 @@ class PlantsFragment : Fragment(R.layout.fragment_plants) {
         { VegetableHolder(it, onPlantClick, onCounterClick) }
         .withItem(FruitHolder.layoutId, FruitHolder.diffCallback)
         { FruitHolder(it, onPlantClick, onCounterClick) }
-        .withDelegate(DragAndDropDelegate<Any> { plantStore.setAction(MovePlant(it.from, it.to)) })
-        .withDelegate(SwipeToDismissDelegate<Plant> { plantStore.setAction(RemovePlant(it.from)) })
+        .withDelegate(DragAndDropDelegate { plantStore.setAction(MovePlant(it.from, it.to)) })
+        .withDelegate(SwipeToDismissDelegate { plantStore.setAction(RemovePlant(it.from)) })
         .build()
 
 

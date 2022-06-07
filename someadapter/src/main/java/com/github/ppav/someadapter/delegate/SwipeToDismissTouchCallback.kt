@@ -37,7 +37,7 @@ class SwipeToDismissTouchCallback(private val onItemSwipe: (position: Int) -> Un
     viewHolder: ViewHolder,
     direction: Int
   ) {
-    onItemSwipe.invoke(viewHolder.adapterPosition)
+    onItemSwipe.invoke(viewHolder.bindingAdapterPosition)
   }
 
   override fun onChildDraw(

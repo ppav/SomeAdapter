@@ -12,16 +12,15 @@ interface DragAndDropHolderListener {
   var onMoveFinish: (() -> Unit)
 }
 
-class DragAndDropResult<T>(
-  val item: T,
+class DragAndDropResult(
+  val item: Any,
   val from: Int,
   val to: Int
 )
 
-@Suppress("UNCHECKED_CAST")
-class DragAndDropDelegate<T>(
+class DragAndDropDelegate(
   private val touchHelper: DragAndDropTouchCallback = DragAndDropTouchCallbackDefault(),
-  val callback: (result: DragAndDropResult<T>) -> Unit,
+  val callback: (result: DragAndDropResult) -> Unit,
 ) : SomeDelegate() {
 
   override fun onAttachRecyclerView(recyclerView: RecyclerView) {
@@ -40,7 +39,7 @@ class DragAndDropDelegate<T>(
         { state: Int, position: Int ->
           when (state) {
             START -> fromIndex = position
-            FINISH -> DragAndDropResult(itemsProvider.invoke()[position] as T, fromIndex, position)
+            FINISH -> DragAndDropResult(itemsProvider.invoke()[position], fromIndex, position)
                 .run(callback::invoke)
           }
         }

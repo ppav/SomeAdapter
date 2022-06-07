@@ -10,7 +10,7 @@ plugins {
 
 allprojects {
   group = "io.github.ppav"
-  version = "0.0.2"
+  version = "0.0.3"
 
   val localProps = gradleLocalProperties(rootDir)
   val emptyJavadocJar by tasks.registering(Jar::class) {
@@ -37,9 +37,9 @@ allprojects {
                   }
                   developers {
                     developer {
-                      id.set("ppav")
-                      name.set("Pavel Potanin")
-                      email.set("pavpotanin@gmail.com")
+                      id.set(localProps.getProperty("developerId"))
+                      name.set(localProps.getProperty("developerName"))
+                      email.set(localProps.getProperty("developerEmail"))
                     }
                   }
                   scm {

@@ -8,14 +8,14 @@ interface SwipeHolderListener {
   var onSwipeFinish: (() -> Unit)
 }
 
-class SwipeToDismissResult<T>(
-  val item: T,
+class SwipeToDismissResult(
+  val item: Any,
   val from: Int,
 )
 
 @Suppress("UNCHECKED_CAST")
-class SwipeToDismissDelegate<T>(
-  private val callback: (result: SwipeToDismissResult<T>) -> Unit,
+class SwipeToDismissDelegate(
+  private val callback: (result: SwipeToDismissResult) -> Unit,
 ) : SomeDelegate() {
 
   override fun onAttachRecyclerView(recyclerView: RecyclerView) {
@@ -26,7 +26,7 @@ class SwipeToDismissDelegate<T>(
                 val item = get(position)
                 removeAt(position)
                 recyclerView.adapter?.notifyItemRangeRemoved(position, 1)
-                callback.invoke(SwipeToDismissResult(item as T, position))
+                callback.invoke(SwipeToDismissResult(item, position))
               }
         }
     ).attachToRecyclerView(recyclerView)
