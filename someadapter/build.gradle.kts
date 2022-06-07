@@ -25,6 +25,25 @@ android {
 }
 
 dependencies {
-  implementation("com.google.android.material:material:1.6.0")
+  implementation("com.google.android.material:material:1.6.1")
   testImplementation("junit:junit:4.13.2")
+}
+
+val sourceJar by tasks.registering(Jar::class) {
+  from(android.sourceSets["main"].java.srcDirs().srcDirs)
+  archiveClassifier.set("sources")
+}
+
+publishing {
+  publications {
+    create<MavenPublication>("release") {
+      artifact(sourceJar.get())
+      artifact("$buildDir/outputs/aar/${artifactId}-${name}.aar")
+    }
+
+    create<MavenPublication>("debug") {
+      artifact(sourceJar.get())
+      artifact("$buildDir/outputs/aar/${artifactId}-${name}.aar")
+    }
+  }
 }
