@@ -13,7 +13,6 @@ class SwipeToDismissResult(
   val from: Int,
 )
 
-@Suppress("UNCHECKED_CAST")
 class SwipeToDismissDelegate(
   private val callback: (result: SwipeToDismissResult) -> Unit,
 ) : SomeDelegate() {
