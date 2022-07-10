@@ -13,5 +13,5 @@ dependencyResolutionManagement {
   }
 }
 rootProject.name = "some-adapter"
-include ':sample'
-include ':someadapter'
+include(":sample")
+include(":someadapter")
