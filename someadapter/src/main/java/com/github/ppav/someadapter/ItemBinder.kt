@@ -9,7 +9,7 @@ open class ItemBinder<D>(
   private val viewHolderCreator: (ViewGroup) -> SomeHolder<D>,
 ) {
 
-  fun isType(any: Any): Boolean = any::class.java == type
+  fun isType(any: Any): Boolean = type.isInstance(any)
 
   fun createViewHolder(
     viewGroup: ViewGroup

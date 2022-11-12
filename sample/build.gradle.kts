@@ -5,18 +5,18 @@ plugins {
 
 dependencies {
   implementation(project(":someadapter"))
-  implementation("com.google.android.material:material:1.6.0")
-  implementation("com.github.bumptech.glide:glide:4.13.0")
+  implementation("com.google.android.material:material:1.7.0")
+  implementation("com.github.bumptech.glide:glide:4.13.2")
   annotationProcessor("com.github.bumptech.glide:compiler:4.13.0")
 
 }
 
 android {
-  compileSdk = 31
+  compileSdk = 32
   defaultConfig {
     applicationId = "com.sample.someadapter"
     minSdk = 21
-    targetSdk = 31
+    targetSdk = 32
     versionCode = 1
     versionName = "1.0"
   }
