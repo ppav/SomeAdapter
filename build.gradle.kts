@@ -10,7 +10,7 @@ plugins {
 
 allprojects {
   group = "io.github.ppav"
-  version = "0.0.3"
+  version = "0.0.4"
 
   val localProps = gradleLocalProperties(rootDir)
   val emptyJavadocJar by tasks.registering(Jar::class) {
