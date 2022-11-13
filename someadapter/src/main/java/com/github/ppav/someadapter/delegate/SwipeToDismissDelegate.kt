@@ -14,12 +14,19 @@ class SwipeToDismissResult(
 )
 
 class SwipeToDismissDelegate(
+  private val isSwipeEnabled: (Any, Int) -> Boolean = { _, _ -> true },
   private val callback: (result: SwipeToDismissResult) -> Unit,
 ) : SomeDelegate() {
 
   override fun onAttachRecyclerView(recyclerView: RecyclerView) {
     ItemTouchHelper(
-        SwipeToDismissTouchCallback { position ->
+        SwipeToDismissTouchCallback(
+            isSwipeEnabled = { position ->
+              isSwipeEnabled.invoke(
+                  itemsProvider.invoke()[position], position
+              )
+            }
+        ) { position ->
           itemsProvider.invoke()
               .run {
                 val item = get(position)

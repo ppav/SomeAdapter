@@ -14,6 +14,7 @@ import com.sample.someadapter.R
 import com.sample.someadapter.databinding.FragmentPlantsVegetableHolderBinding
 import com.sample.someadapter.domain.Plant
 import com.sample.someadapter.domain.Plant.Fruit
+import com.sample.someadapter.domain.Plant.Vegetable
 import com.sample.someadapter.presentation.plants.data.PlantAction.ChangeSorting
 import com.sample.someadapter.presentation.plants.data.PlantAction.MovePlant
 import com.sample.someadapter.presentation.plants.data.PlantAction.PlantDecrease
@@ -44,7 +45,11 @@ class PlantsFragment : Fragment(R.layout.fragment_plants) {
             DragAndDropDelegate(isDragEnabled = { item, _ -> item is Fruit }) {
               plantStore.setAction(MovePlant(it.from, it.to))
             })
-        .withDelegate(SwipeToDismissDelegate { plantStore.setAction(RemovePlant(it.from)) })
+        .withDelegate(
+            SwipeToDismissDelegate(
+                isSwipeEnabled = { item, position -> item is Vegetable }) {
+              plantStore.setAction( RemovePlant(it.from) )
+            })
         .build()
 
 

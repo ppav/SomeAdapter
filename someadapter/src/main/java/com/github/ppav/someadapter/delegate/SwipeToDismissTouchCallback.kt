@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlin.math.abs
 
-class SwipeToDismissTouchCallback(private val onItemSwipe: (position: Int) -> Unit) : Callback() {
+class SwipeToDismissTouchCallback(
+  private val isSwipeEnabled: (Int) -> Boolean,
+  private val onItemSwipe: (position: Int) -> Unit
+) : Callback() {
 
   companion object {
     const val ALPHA_FULL = 1.0f
@@ -22,7 +25,9 @@ class SwipeToDismissTouchCallback(private val onItemSwipe: (position: Int) -> Un
       0
     } else {
       ItemTouchHelper.START or ItemTouchHelper.END
-    }.let { makeMovementFlags(0, it) }
+    }
+        .let { it.takeIf { isSwipeEnabled.invoke(viewHolder.bindingAdapterPosition) } ?: 0 }
+        .let { makeMovementFlags(0, it) }
   }
 
   override fun onMove(

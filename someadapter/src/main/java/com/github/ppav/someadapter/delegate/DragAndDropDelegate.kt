@@ -20,7 +20,7 @@ class DragAndDropResult(
 
 class DragAndDropDelegate(
   private val isDragEnabled: (Any, Int) -> Boolean = { _, _ -> true },
-  val callback: (result: DragAndDropResult) -> Unit,
+  private val callback: (result: DragAndDropResult) -> Unit,
 ) : SomeDelegate() {
 
   private val touchHelper: DragAndDropTouchCallback = DragAndDropTouchCallbackDefault { position ->
