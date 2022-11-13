@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.github.ppav.someadapter.delegate.DragAndDropTouchCallback.Listener.Companion.FINISH
 import com.github.ppav.someadapter.delegate.DragAndDropTouchCallback.Listener.Companion.START
 
-internal class DragAndDropTouchCallbackDefault : DragAndDropTouchCallback() {
+internal class DragAndDropTouchCallbackDefault(
+  private val isDragEnabled: (Int) -> Boolean
+) : DragAndDropTouchCallback() {
 
   private var listener: Listener? = null
 
@@ -23,7 +25,9 @@ internal class DragAndDropTouchCallbackDefault : DragAndDropTouchCallback() {
       ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
     } else {
       ItemTouchHelper.UP or ItemTouchHelper.DOWN
-    }.let { makeMovementFlags(it, 0) }
+    }
+        .let { it.takeIf { isDragEnabled.invoke(viewHolder.bindingAdapterPosition) } ?: 0 }
+        .let { makeMovementFlags(it, 0) }
   }
 
   override fun onMove(

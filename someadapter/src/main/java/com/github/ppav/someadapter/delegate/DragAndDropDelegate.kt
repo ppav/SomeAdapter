@@ -19,9 +19,15 @@ class DragAndDropResult(
 )
 
 class DragAndDropDelegate(
-  private val touchHelper: DragAndDropTouchCallback = DragAndDropTouchCallbackDefault(),
+  private val isDragEnabled: (Any, Int) -> Boolean = { _, _ -> true },
   val callback: (result: DragAndDropResult) -> Unit,
 ) : SomeDelegate() {
+
+  private val touchHelper: DragAndDropTouchCallback = DragAndDropTouchCallbackDefault { position ->
+    isDragEnabled.invoke(
+        itemsProvider.invoke()[position], position
+    )
+  }
 
   override fun onAttachRecyclerView(recyclerView: RecyclerView) {
 

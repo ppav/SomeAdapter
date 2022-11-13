@@ -13,6 +13,7 @@ import com.github.ppav.someadapter.withItem
 import com.sample.someadapter.R
 import com.sample.someadapter.databinding.FragmentPlantsVegetableHolderBinding
 import com.sample.someadapter.domain.Plant
+import com.sample.someadapter.domain.Plant.Fruit
 import com.sample.someadapter.presentation.plants.data.PlantAction.ChangeSorting
 import com.sample.someadapter.presentation.plants.data.PlantAction.MovePlant
 import com.sample.someadapter.presentation.plants.data.PlantAction.PlantDecrease
@@ -39,7 +40,10 @@ class PlantsFragment : Fragment(R.layout.fragment_plants) {
         { VegetableHolder(it, onPlantClick, onCounterClick) }
         .withItem(FruitHolder.layoutId, FruitHolder.diffCallback)
         { FruitHolder(it, onPlantClick, onCounterClick) }
-        .withDelegate(DragAndDropDelegate { plantStore.setAction(MovePlant(it.from, it.to)) })
+        .withDelegate(
+            DragAndDropDelegate(isDragEnabled = { item, _ -> item is Fruit }) {
+              plantStore.setAction(MovePlant(it.from, it.to))
+            })
         .withDelegate(SwipeToDismissDelegate { plantStore.setAction(RemovePlant(it.from)) })
         .build()
 
@@ -49,7 +53,7 @@ class PlantsFragment : Fragment(R.layout.fragment_plants) {
 
     view.findViewById<RecyclerView>(R.id.recycler)
         .apply {
-          layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+          layoutManager = LinearLayoutManager(requireContext())
           adapter = plantAdapter
         }
 
